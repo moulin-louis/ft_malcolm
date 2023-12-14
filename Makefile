@@ -9,10 +9,12 @@
 #    Updated: 2023/02/15 11:49:33 by loumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+CC= /usr/bin/clang
 all:
-	mkdir -p build
-	cd build && cmake .. && cd ..
-	cmake --build build --config Release -j 12
+	mkdir -p cmake-build-debug
+	cd cmake-build-debug && cmake .. && cd ..
+	cmake --build cmake-build-debug --config Release -j 12
+	docker compose up --build -d
 
 clean:
 	rm -rf ./build/CMakeFiles
@@ -20,9 +22,11 @@ clean:
 	rm -rf ./build/cmake_install.cmake
 	rm -rf ./build/CMakeCache.txt
 	rm -rf ./build/Makefile
+	docker compose down
 
 fclean:
-	rm -rf build
+	./clean.sh
+	rm -rf cmake-build-debug
 
 re:			fclean all
 

