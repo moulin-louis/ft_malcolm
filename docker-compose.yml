@@ -1,29 +1,29 @@
 version: '3.1'
 
 services:
-  source:
-    env_file: .env
-    privileged: true
-    container_name: "source"
-    build:
-      context: .
-      dockerfile: ./docker_file/Dockerfile.source
-    mac_address: ${MAC_SOURCE}
-    networks:
-      app_net:
-        ipv4_address: ${IP_SOURCE}
+#  source:
+#    env_file: .env
+#    privileged: true
+#    container_name: "source"
+#    build:
+#      context: .
+#      dockerfile: ./docker_file/Dockerfile.source
+#    mac_address: ${MAC_SOURCE}
+#    networks:
+#      app_net:
+#        ipv4_address: ${IP_SOURCE}
 
-  target:
+  victim:
     env_file: .env
     privileged: true
-    container_name: "target"
+    container_name: "victim"
     build:
       context: .
-      dockerfile: ./docker_file/Dockerfile.target
-    mac_address: ${MAC_TARGET}
+      dockerfile: ./docker_file/Dockerfile.victim
+    mac_address: ${MAC_VICTIM}
     networks:
       app_net:
-        ipv4_address: ${IP_TARGET}
+        ipv4_address: ${IP_VICTIM}
 
   ft_malcolm:
     env_file: .env

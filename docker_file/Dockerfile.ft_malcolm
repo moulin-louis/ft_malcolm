@@ -1,11 +1,11 @@
 FROM debian:latest
 
-RUN apt update && apt install -y build-essential cmake clang fish valgrind iproute2 tcpdump
+RUN apt update && apt install -y build-essential cmake clang fish valgrind iproute2 tcpdump net-tools
 
 COPY ../inc ./inc
 COPY ../CMakeLists.txt .
 COPY ../src ./src
-RUN cmake -S . -B build && cmake --build build && mv ./build/ft_malcolm .
-RUN echo "./ft_malcolm \$IP_SOURCE \$MAC_SOURCE \$IP_TARGET \$MAC_TARGET" > launch.sh && chmod +x launch.sh
+RUN mkdir build && cd build && cmake -DVERBOSE=1 .. && cd .. && cmake --build build && mv ./build/ft_malcolm .
+RUN echo "./ft_malcolm \$IP_SOURCE \$MAC_SOURCE \$IP_VICTIM \$MAC_VICTIM" > launch.sh && chmod +x launch.sh
 
 CMD tail -f

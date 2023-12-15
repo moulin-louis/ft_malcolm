@@ -34,9 +34,11 @@
 #pragma pack(1)
 typedef struct {
   uint8_t* ip_src;
+  uint8_t ip_src_byte_arr[4];
   uint8_t* mac_src;
   uint8_t mac_src_byte_arr[6];
   uint8_t* ip_target;
+  uint8_t ip_target_byte_arr[4];
   uint8_t* mac_target;
   uint8_t mac_target_byte_arr[6];
   int32_t sock;
@@ -67,7 +69,7 @@ typedef struct {
   uint8_t dest_addr[ETHER_ADDR_LEN];
   uint8_t src_addr[ETHER_ADDR_LEN];
   uint8_t ethertype[ETHER_TYPE_LEN];
-  uint8_t data[sizeof(t_packet)];
+  uint8_t data[1024];
 } ethernet_frame;
 #pragma pack()
 
@@ -81,12 +83,15 @@ extern char stop;
 
 void mac_str_to_hex(uint8_t* mac_addr, uint8_t* dest);
 
-__attribute__((noreturn)) void error(const char* func_error, const char* error_msg, const char* file, int line,
-                                     const char* func_caller);
+void error(const char* func_error, const char* error_msg, const char* file, const int line, const char* func_caller);
 
-void send_fake_arp_packet(const t_malcolm* mal, const uint32_t target);
+void send_fake_arp_packet(const t_malcolm* malcolm, const uint32_t target);
 
-void restore_arp_tables(const t_malcolm* mal, const uint32_t target);
+void restore_arp_tables(const t_malcolm* malcolm, const uint32_t target);
 
-void spoof_back_request(const t_malcolm* mal, const ethernet_frame* packet);
+void spoof_back_request(const t_malcolm* malcolm, const ethernet_frame* eth_frame);
+
+void print_arp_packet(const t_packet* packet);
+
+void print_ethernet_frame(const ethernet_frame* eth);
 #endif //FT_malcolm_H

@@ -9,24 +9,19 @@
 #    Updated: 2023/02/15 11:49:33 by loumouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-CC= /usr/bin/clang
 all:
-	mkdir -p cmake-build-debug
-	cd cmake-build-debug && cmake .. && cd ..
-	cmake --build cmake-build-debug --config Release -j 12
 	docker compose up --build -d
 
 clean:
-	rm -rf ./build/CMakeFiles
-	rm -rf ./build/libft
-	rm -rf ./build/cmake_install.cmake
-	rm -rf ./build/CMakeCache.txt
-	rm -rf ./build/Makefile
 	docker compose down
 
 fclean:
-	./clean.sh
-	rm -rf cmake-build-debug
+	-docker stop $(docker ps -qa) > /dev/null 2>&1
+	-docker rm $(docker ps -qa) > /dev/null 2>&1
+	-docker rmi -f $(docker images -qa) > /dev/null 2>&1
+	-docker volume rm $(docker volume ls -q) > /dev/null 2>&1
+	-docker network prune -f > /dev/null 2>&1
+	-yes | docker system prune -a > /dev/null 2>&1
 
 re:			fclean all
 
