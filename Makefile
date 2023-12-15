@@ -15,7 +15,7 @@ all:
 clean:
 	docker compose down
 
-fclean:
+fclean: clean
 	-docker stop $(docker ps -qa) > /dev/null 2>&1
 	-docker rm $(docker ps -qa) > /dev/null 2>&1
 	-docker rmi -f $(docker images -qa) > /dev/null 2>&1
