@@ -5,7 +5,7 @@ project(ft_malcolm C)
 
 if (VERBOSE)
     add_compile_options(-DVERBOSE=1)
-endif()
+endif ()
 add_subdirectory(src/libft)
 add_compile_options(-Wall -Werror -Wextra)
 include_directories(./inc src/libft/inc)

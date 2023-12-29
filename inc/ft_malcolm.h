@@ -8,44 +8,38 @@
 #include <libft.h>
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include <errno.h>
-#include <ctype.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <net/if.h>
 #include <netinet/if_ether.h>
-#include <netinet/ip.h>
-#include <net/ethernet.h>
 #include <linux/if_packet.h>
-#include <sys/time.h>
-#include <signal.h>
-#include <netinet/ip.h>
-#include <netinet/tcp.h>
 #include <stdbool.h>
 #include <sys/wait.h>
+#include <ifaddrs.h>
+
+extern char stop;
+
 #define HW_TYPE_ETHERNET 0x0001 // 1
 #define LEN_HW_ETHERNET 6
 #define LEN_PROTO_IPV4 4
+# define INTERFACE_NAME "eth0"
 
 #pragma pack(1)
 typedef struct {
-  uint8_t* ip_src;
-  uint8_t ip_src_byte_arr[4];
-  uint8_t* mac_src;
-  uint8_t mac_src_byte_arr[6];
-  uint8_t* ip_target;
-  uint8_t ip_target_byte_arr[4];
-  uint8_t* mac_target;
-  uint8_t mac_target_byte_arr[6];
-  int32_t sock;
+  uint8_t* ip_src; //string representation of ip_source
+  uint8_t ip_src_byte_arr[4]; //bytes representation of ip_source
+  uint8_t* mac_src; //string repre of mac_source
+  uint8_t mac_src_byte_arr[6]; //bytes repre of mac_source 
+  uint8_t* ip_target; //string repre of ip_target
+  uint8_t ip_target_byte_arr[4]; //bytes repre of ip_target
+  uint8_t* mac_target; //string repre of mac_target
+  uint8_t mac_target_byte_arr[6]; //bytes repre of mac_target
+  int32_t sock; //socket used to respond back
   struct ifreq ifr;
-  uint32_t index;
+  uint32_t index; //index of the interface used
   struct sockaddr_in* brd;
-  int32_t sock_broad;
+  uint8_t brd_addr[IF_NAMESIZE]; //broadcast address
+  int32_t sock_broad; //socket used to listen to broadcast
 } t_malcolm;
 #pragma pack()
 
@@ -77,9 +71,6 @@ typedef struct {
 # define GREEN "\033[0;32m"
 # define YELLOW "\033[0;33m"
 # define RESET "\x1B[0m"
-# define INTERFACE_NAME "eth0"
-
-extern char stop;
 
 void mac_str_to_hex(uint8_t* mac_addr, uint8_t* dest);
 

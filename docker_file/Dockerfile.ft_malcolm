@@ -5,7 +5,8 @@ RUN apt update && apt install -y build-essential cmake clang fish valgrind iprou
 COPY ../inc ./inc
 COPY ../CMakeLists.txt .
 COPY ../src ./src
-RUN mkdir build && cd build && cmake -DVERBOSE=1 .. && cd .. && cmake --build build && mv ./build/ft_malcolm .
+# RUN mkdir build && cd build && cmake -DVERBOSE=1 .. && cd .. && cmake --build build && mv ./build/ft_malcolm .
+RUN mkdir build && cd build && cmake .. && cd .. && cmake --build build && mv ./build/ft_malcolm .
 RUN echo "./ft_malcolm \$IP_SOURCE \$MAC_SOURCE \$IP_VICTIM \$MAC_VICTIM" > launch.sh && chmod +x launch.sh
 
 CMD tail -f

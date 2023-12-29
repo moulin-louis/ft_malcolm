@@ -1,18 +1,6 @@
 version: '3.1'
 
 services:
-#  source:
-#    env_file: .env
-#    privileged: true
-#    container_name: "source"
-#    build:
-#      context: .
-#      dockerfile: ./docker_file/Dockerfile.source
-#    mac_address: ${MAC_SOURCE}
-#    networks:
-#      app_net:
-#        ipv4_address: ${IP_SOURCE}
-
   victim:
     env_file: .env
     privileged: true
@@ -32,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: ./docker_file/Dockerfile.ft_malcolm
-    mac_address: "02:42:ac:11:00:04"
+    mac_address: "02:42:ac:11:00:03"
     networks:
       app_net:
         ipv4_address: 172.16.238.30
