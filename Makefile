@@ -15,13 +15,13 @@ all:
 clean:
 	docker compose down
 
-fclean: clean
-	-docker stop $(docker ps -qa) > /dev/null 2>&1
-	-docker rm $(docker ps -qa) > /dev/null 2>&1
-	-docker rmi -f $(docker images -qa) > /dev/null 2>&1
-	-docker volume rm $(docker volume ls -q) > /dev/null 2>&1
-	-docker network prune -f > /dev/null 2>&1
-	-yes | docker system prune -a > /dev/null 2>&1
+fclean:
+	@docker stop $$(docker ps -qa) > /dev/null 2> /dev/null ;\
+	docker rm $$(docker ps -qa) > /dev/null 2> /dev/null;\
+	docker rmi -f $$(docker images -qa) > /dev/null 2> /dev/null;\
+	docker volume rm $$(docker volume ls -q) > /dev/null 2> /dev/null;\
+	docker network prune -f > /dev/null 2> /dev/null;
+	@yes | docker system prune -a
 
 re:			fclean all
 
