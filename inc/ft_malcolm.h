@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <sys/wait.h>
 #include <ifaddrs.h>
+#include <string.h>
 
 extern char stop;
 

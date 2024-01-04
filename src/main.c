@@ -47,7 +47,7 @@ static void init_inqui(t_malcolm* malcolm, char** av) {
     error("socket", NULL, __FILE__, __LINE__, __func__);
   interface_setup(malcolm);
   malcolm->ifr.ifr_addr.sa_family = AF_INET; //we want ipv4 family
-  ft_strlcpy(malcolm->ifr.ifr_name, INTERFACE_NAME, strlen(INTERFACE_NAME) + 1); //coppying interface name
+  ft_strlcpy(malcolm->ifr.ifr_name, INTERFACE_NAME, ft_strlen(INTERFACE_NAME) + 1); //coppying interface name
   mac_str_to_hex(malcolm->mac_src, malcolm->mac_src_byte_arr); //convert mac_source to bytes array
   mac_str_to_hex(malcolm->mac_target, malcolm->mac_target_byte_arr); //convert mac_target to bytes array
   inet_pton(AF_INET, (char *)malcolm->ip_src, malcolm->ip_src_byte_arr); //convert ip_src to bytes array
