@@ -4,7 +4,7 @@
 
 #include "ft_malcolm.h"
 
-// char *strerror(int errnum);
+char *strerror(int errnum);
 
 __attribute__((noreturn)) void exit_syscall(void) {
   asm volatile("movq $60, %rax\n" // syscall number for exit
