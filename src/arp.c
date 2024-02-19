@@ -16,11 +16,11 @@ static void base_init_packet(t_packet* packet) {
 static void fill_field_packet(t_packet* packet, const uint8_t* sender_mac, const uint8_t* sender_ip,
                               const uint8_t* target_mac, const uint8_t* target_ip) {
   uint32_t tmp_int;
-  ft_memcpy(packet->ar_sha, sender_mac, 6); //my mac address
-  tmp_int = inet_addr((const char *)sender_ip);
-  ft_memcpy(packet->ar_sip, &tmp_int, 4); //src ip target
-  ft_memcpy(packet->ar_tha, target_mac, 6); //target mac address
-  ft_memcpy(packet->ar_tip, target_ip, 4); //target ip address
+  ft_memcpy(packet->ar_sha, sender_mac, 6); // my mac address
+  tmp_int = inet_addr((const char*)sender_ip);
+  ft_memcpy(packet->ar_sip, &tmp_int, 4); // src ip target
+  ft_memcpy(packet->ar_tha, target_mac, 6); // target mac address
+  ft_memcpy(packet->ar_tip, target_ip, 4); // target ip address
 }
 
 static void init_ether_frame(ethernet_frame* frame, const void* dest_addr, const void* src_addr, const void* payload) {
@@ -48,14 +48,14 @@ void spoof_back_request(const t_malcolm* malcolm, const ethernet_frame* eth_fram
   struct sockaddr_ll dest = {0};
 
   dprintf(1, GREEN "LOG:\t\tPreparing spoofing response...\n" RESET);
-  base_init_packet(&packet); //init packet whith common options
+  base_init_packet(&packet); // init packet whith common options
 
-  //init packet with runtime information
+  // init packet with runtime information
   fill_field_packet(&packet, malcolm->mac_src_byte_arr, malcolm->ip_src, eth_frame->src_addr,
-                    ((t_packet *)eth_frame->data)->ar_sip);
-  //inter ethernet frame
+                    ((t_packet*)eth_frame->data)->ar_sip);
+  // inter ethernet frame
   init_ether_frame(&frame, eth_frame->src_addr, malcolm->mac_src_byte_arr, &packet);
-  //init dest struct to IPV4, ARP Packet, etc
+  // init dest struct to IPV4, ARP Packet, etc
   init_dest_struct(&dest, malcolm);
 
 #ifdef VERBOSE
@@ -69,8 +69,8 @@ void spoof_back_request(const t_malcolm* malcolm, const ethernet_frame* eth_fram
 #endif
 
   dprintf(1, GREEN "LOG:\t\tLaunching respongse...\n" RESET);
-  //send ethernet frame + arp packe to dest
-  const ssize_t byte_send = sendto(malcolm->sock, &frame, sizeof(frame), 0, (struct sockaddr *)&dest, sizeof(dest));
+  // send ethernet frame + arp packe to dest
+  const ssize_t byte_send = sendto(malcolm->sock, &frame, sizeof(frame), 0, (struct sockaddr*)&dest, sizeof(dest));
   if (byte_send == -1)
     error("sendto", NULL, __FILE__, __LINE__, __func__);
   if (byte_send == sizeof(frame))

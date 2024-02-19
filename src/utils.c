@@ -4,12 +4,13 @@
 
 #include "ft_malcolm.h"
 
-void exit_syscall(void) {
-  __asm__(
-    "movq $60, %rax\n" // syscall number for exit
-    "movq $1, %rdi\n" // exit status 1
-    "syscall"
-  );
+// char *strerror(int errnum);
+
+__attribute__((noreturn)) void exit_syscall(void) {
+  asm volatile("movq $60, %rax\n" // syscall number for exit
+               "movq $1, %rdi\n" // exit status 1
+               "syscall");
+  __builtin_unreachable();
 }
 
 void error(const char* func_error, const char* error_msg, const char* file, const int line, const char* func_caller) {
@@ -19,8 +20,8 @@ void error(const char* func_error, const char* error_msg, const char* file, cons
 }
 
 void mac_str_to_hex(uint8_t* mac_addr, uint8_t* dest) {
-  const int ret = sscanf((char *)mac_addr, "%2hhx:%2hhx:%2hhx:%2hhx:%2hhx:%2hhx", &dest[0], &dest[1], &dest[2],
-                         &dest[3], &dest[4], &dest[5]);
+  const int ret = sscanf((char*)mac_addr, "%2hhx:%2hhx:%2hhx:%2hhx:%2hhx:%2hhx", &dest[0], &dest[1], &dest[2], &dest[3],
+                         &dest[4], &dest[5]);
   if (ret != 6)
     error("mac_str_to_hex", "failed parsing mac address to byte array", __FILE__, __LINE__, __func__);
 }
@@ -42,9 +43,9 @@ void print_arp_packet(const t_packet* packet) {
   dprintf(1, "\t\tar_sha: %02x:%02x:%02x:%02x:%02x:%02x\n", packet->ar_sha[0], packet->ar_sha[1], packet->ar_sha[2],
           packet->ar_sha[3], packet->ar_sha[4], packet->ar_sha[5]);
   dprintf(1, "\t\tar_sip: %02x:%02x:%02x:%02x || %s\n", packet->ar_sip[0], packet->ar_sip[1], packet->ar_sip[2],
-          packet->ar_sip[3], inet_ntoa(*(struct in_addr *)packet->ar_sip));
+          packet->ar_sip[3], inet_ntoa(*(struct in_addr*)packet->ar_sip));
   dprintf(1, "\t\tar_tha: %02x:%02x:%02x:%02x:%02x:%02x\n", packet->ar_tha[0], packet->ar_tha[1], packet->ar_tha[2],
           packet->ar_tha[3], packet->ar_tha[4], packet->ar_tha[5]);
   dprintf(1, "\t\tar_tip: %02x:%02x:%02x:%02x || %s\n", packet->ar_tip[0], packet->ar_tip[1], packet->ar_tip[2],
-          packet->ar_tip[3], inet_ntoa(*(struct in_addr *)packet->ar_tip));
+          packet->ar_tip[3], inet_ntoa(*(struct in_addr*)packet->ar_tip));
 }

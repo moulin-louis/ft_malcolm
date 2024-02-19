@@ -7,11 +7,15 @@ if (VERBOSE)
     add_compile_options(-DVERBOSE=1)
 endif ()
 add_subdirectory(src/libft)
-add_compile_options(-Wall -Werror -Wextra)
-include_directories(./inc src/libft/inc)
+
+include_directories(./inc ./src/libft/inc)
+
+add_compile_options(-g -Wall -Wextra -Werror)
+
 add_executable(ft_malcolm
-        src/main.c
         inc/ft_malcolm.h
+        src/main.c
         src/utils.c
         src/arp.c)
+
 target_link_libraries(ft_malcolm ft)
